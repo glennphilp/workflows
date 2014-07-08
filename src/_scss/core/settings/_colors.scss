@@ -1,0 +1,44 @@
+// We use these as default colors throughout
+ $profile-maroon:     rgb(120,68,90);
+ $ut-orange:          rgb(244,133,73);
+ $utsw-drk-blue:      rgb(51,74,106);
+ $utsw-lt-blue:       rgb(104,135,180);
+// Blues
+ $blue:               #344a6b;
+ $blue-alt:           tint($blue, 35%);
+// Light Greys
+ $light-grey:         #cdcdc5;
+ $light-grey-alt:     scale-color($light-grey, $lightness: 20%);
+ $light-grey-40:      scale-color($light-grey, $lightness: 40%);
+ $light-grey-60:      scale-color($light-grey, $lightness: 60%);
+ $light-grey-80:      scale-color($light-grey, $lightness: 80%);
+
+// Dark Greys
+ $dark-grey:          #636B78;
+
+$color-black: #000;
+$color-white: #FFF;
+$color-brand-blue: #334A6A;
+$color-brand-lt-blue: lighten($color-brand-blue, 25.5%); //#6887B4
+$color-blueberry: #24559C;
+$color-slate-gray: #636B78; // Med Link Hover Color
+$color-teal: #309AA7; // Secondary Teal #21828E
+
+$color-dark-gray: #626B77; // Secondary Gray #E0DFDA
+$color-yellow: #F6FE4D;  // Yellow #FCEB93
+$color-neon-yellow: #EDFE87;
+$color-orange: #F47E3F;
+
+$base-font-color: lighten($color-black, 33.4%);
+
+$primary-color: $color-brand-blue;
+$secondary-color: #9D9791;
+
+ $alert-color: #f04124;
+ $action-color: $color-orange;
+ $success-color: #43AC6A;
+ $warning-color: #f08a24;
+ $info-color: #a0d3e8;
+// $primary-brand: #;
+// $secondary-brand: #;
+// $edu-eyebrow: #;

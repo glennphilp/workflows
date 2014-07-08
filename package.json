@@ -1,0 +1,13 @@
+{
+  "name": "workflow",
+  "version": "0.0.1",
+  "description": "The basic front-end developer Gulp project",
+  "main": "index.js",
+  
+  "repository": {
+    "type": "git",
+    "url": "?.git"
+  },
+  "author": "Glenn Philp",
+  "license": "ISC"
+}
