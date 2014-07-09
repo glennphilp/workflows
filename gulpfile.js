@@ -3,6 +3,7 @@ var gulp        = require('gulp'),
     util        = require('gulp-util'),
     browserify  = require('gulp-browserify'),
     coffee      = require('gulp-coffee'),
+    compass     = require('gulp-compass'),
     concat      = require('gulp-concat');
 
 var paths = {
@@ -14,13 +15,13 @@ var paths = {
     'src/components/js/tagline.js',
     'src/components/js/template.js'
   ],
-  jsDevDst:   'src/js'
+  jsDevDst:   'src/js',
 //    imgSrc: './src/images/**/*',
 //    imgDst: './build/images',
 //    htmlSrc: './src/*.html',
 //    htmlDst: './build',
-//    scssSrc: ['./src/scss/**/*.scss', '!./src/scss/core/**/*.scss'],
-//    scssDst: './src/css/',
+  scssSrc: ['./src/_scss/style.scss'],
+  scssDst: './src/css/'
 //    cssSrc: './src/css/**/*.css',
 //    cssDst: './build/css'
 };
@@ -38,4 +39,15 @@ gulp.task('js', function() {
     .pipe(concat('script.js'))
     .pipe(browserify())
     .pipe(gulp.dest(paths.jsDevDst))
+});
+
+gulp.task('compass', function() {
+  gulp.src(paths.scssSrc)
+    .pipe(compass({
+      sass: 'src/_scss',
+      image: 'src/imgs',
+      style: 'expanded'
+    }))
+    .on('error', util.log)
+    .pipe(gulp.dest(paths.scssDst))
 });
