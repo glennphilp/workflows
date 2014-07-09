@@ -1,26 +1,17 @@
 // include gulp
 var gulp    = require('gulp'),
     util    = require('gulp-util'),
-    coffee  = require('gulp-coffee');
- 
-// include plug-ins
-//var jshint = require('gulp-jshint'),
-//    changed = require('gulp-changed'),
-//    imagemin = require('gulp-imagemin'),
-//    minifyHTML = require('gulp-minify-html'),
-//    concat = require('gulp-concat'),
-//    stripDebug = require('gulp-strip-debug'),
-//    uglify = require('gulp-uglify'),
-//    sass = require('gulp-sass'),
-//    compass = require('gulp-compass'),
-//    autoprefix = require('gulp-autoprefixer'),
-//    minifyCSS = require('gulp-minify-css');
+    coffee  = require('gulp-coffee'),
+    concat  = require('gulp-concat');
 
 var paths = {
-  coffeeSrc: ['src/scripts/coffee/*.coffee'],
-  coffeeDst: ['src/scripts/']
-//    jsSrc: ['./src/js/foundation.js', './src/js/foundation/*.js'],
-//    jsDst: './build/js',
+  coffeeSrc: ['./src/components/coffee/tagline.coffee'],
+  coffeeDst: ['./src/components/js'],
+  jsSrc: [
+    'src/components/js/rclick.js',
+    'src/components/js/pixgrid.js'
+  ],
+  jsDevDst: 'src/js/'
 //    imgSrc: './src/images/**/*',
 //    imgDst: './build/images',
 //    htmlSrc: './src/*.html',
@@ -31,9 +22,20 @@ var paths = {
 //    cssDst: './build/css'
 };
 
+
+// Preprocessing Coffee Script
+// FIXME: Revisit why Coffee is processing since
+// changing src and dest to the path variables instead
+// of the inline paths.
 gulp.task('coffee', function() {
-  gulp.src('paths.coffeeSrc')
+  gulp.src(paths.coffeeSrc)
     .pipe(coffee({ bare: true })
       .on('error', util.log))
-    .pipe(gulp.dest('paths.coffeeDst'));
+    .pipe(gulp.dest(paths.coffeeDst));
+});
+
+gulp.task('js', function() {
+  gulp.src(paths.jsSrc)
+    .pipe(concat('script.js'))
+    .pipe(gulp.dest(paths.jsDevDst));
 });
