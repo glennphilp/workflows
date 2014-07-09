@@ -51,3 +51,11 @@ gulp.task('compass', function() {
     .on('error', util.log)
     .pipe(gulp.dest(paths.scssDst))
 });
+
+gulp.task('watch', function() {
+  gulp.watch(paths.coffeeSrc, ['coffee']);
+  gulp.watch(paths.jsSrc, ['js']);
+  gulp.watch('src/_scss/**/*.scss', ['compass']);
+});
+
+gulp.task('default', ['coffee', 'js', 'compass']);
