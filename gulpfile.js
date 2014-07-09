@@ -1,5 +1,7 @@
 // include gulp
-var gulp = require('gulp'); 
+var gulp    = require('gulp'),
+    util    = require('gulp-util'),
+    coffee  = require('gulp-coffee');
  
 // include plug-ins
 //var jshint = require('gulp-jshint'),
@@ -14,7 +16,9 @@ var gulp = require('gulp');
 //    autoprefix = require('gulp-autoprefixer'),
 //    minifyCSS = require('gulp-minify-css');
 
-//var paths = {
+var paths = {
+  coffeeSrc: ['src/scripts/coffee/*.coffee'],
+  coffeeDst: ['src/scripts/']
 //    jsSrc: ['./src/js/foundation.js', './src/js/foundation/*.js'],
 //    jsDst: './build/js',
 //    imgSrc: './src/images/**/*',
@@ -26,3 +30,10 @@ var gulp = require('gulp');
 //    cssSrc: './src/css/**/*.css',
 //    cssDst: './build/css'
 };
+
+gulp.task('coffee', function() {
+  gulp.src('paths.coffeeSrc')
+    .pipe(coffee({ bare: true })
+      .on('error', util.log))
+    .pipe(gulp.dest('paths.coffeeDst'));
+});
