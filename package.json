@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "description": "The basic front-end developer Gulp project",
   "main": "index.js",
-  
   "repository": {
     "type": "git",
     "url": "?.git"
   },
   "author": "Glenn Philp",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.8.5"
+  }
 }
