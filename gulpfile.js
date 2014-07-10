@@ -7,6 +7,7 @@ var gulp        = require('gulp'),
     concat      = require('gulp-concat'),
     connect     = require('gulp-connect'),
     gulpIf      = require('gulp-if'),
+    minifyHtml  = require('gulp-minify-html'),
     uglify      = require('gulp-uglify');
 
 var env,
@@ -41,8 +42,8 @@ var paths = {
   jsonSrc:    [outputDir + 'js/*.json'],
 //    imgSrc: './src/images/**/*',
 //    imgDst: './build/images',
-  htmlSrc:    [outputDir + '*.html'],
-//  htmlDst:    outputDir,
+  htmlSrc:    ['src/*.html'],
+  htmlDst:    outputDir,
   scssSrc:    ['./src/_scss/style.scss'],
   scssDst:    outputDir + 'css'
 //    cssSrc: './src/css/**/*.css',
@@ -61,7 +62,7 @@ gulp.task('js', function() {
   gulp.src(paths.jsSrc)
     .pipe(concat('script.js'))
     .pipe(browserify())
-    .pipe(uglify(env === 'production', uglify()))
+    .pipe(gulpIf(env === 'production', uglify()))
     .pipe(gulp.dest(paths.jsDst))
     .pipe(connect.reload())
 });
@@ -86,6 +87,8 @@ gulp.task('connect', function() {
 
 gulp.task('html', function() {
   gulp.src(paths.htmlSrc)
+    .pipe(gulpIf(env === 'production', minifyHtml()))
+    .pipe(gulpIf(env === 'production', gulp.dest(paths.htmlDst)))
     .pipe(connect.reload())
 });
 
