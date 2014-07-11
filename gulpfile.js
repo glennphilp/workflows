@@ -8,6 +8,9 @@ var gulp        = require('gulp'),
     connect     = require('gulp-connect'),
     gulpIf      = require('gulp-if'),
     minifyHtml  = require('gulp-minify-html'),
+    minifyImg   = require('gulp-imagemin'),
+    minifyJson  = require('gulp-jsonminify'),
+    pngcrush    = require('imagemin-pngcrush'),
     uglify      = require('gulp-uglify');
 
 var env,
@@ -15,6 +18,7 @@ var env,
     jsSrc,
     jsonSrc,
     htmlSrc,
+    imgSrc,
     scssSrc,
     outputDir,
     sassOutput;
@@ -39,8 +43,8 @@ var paths = {
     'src/components/js/template.js'
   ],
   jsDst:      outputDir + 'js',
-  jsonSrc:    [outputDir + 'js/*.json'],
-//    imgSrc: './src/images/**/*',
+  jsonSrc:    ['src/js/*.json'],
+  imgSrc:     ['src/imgs/**/*.*'],
 //    imgDst: './build/images',
   htmlSrc:    ['src/*.html'],
   htmlDst:    outputDir,
@@ -67,6 +71,13 @@ gulp.task('js', function() {
     .pipe(connect.reload())
 });
 
+gulp.task('json', function() {
+  gulp.src(paths.jsonSrc)
+    .pipe(gulpIf(env === 'production', minifyJson()))
+    .pipe(gulpIf(env === 'production', gulp.dest('build/js')))
+    .pipe(connect.reload())
+});
+
 gulp.task('compass', function() {
   gulp.src(paths.scssSrc)
     .pipe(compass({
@@ -78,23 +89,29 @@ gulp.task('compass', function() {
     .pipe(gulp.dest(paths.scssDst))
 });
 
+gulp.task('html', function() {
+  gulp.src(paths.htmlSrc)
+    .pipe(gulpIf(env === 'production', minifyHtml()))
+    .pipe(gulpIf(env === 'production', gulp.dest(outputDir)))
+    .pipe(connect.reload())
+});
+
+gulp.task('images', function() {
+  gulp.src(paths.imgSrc)
+    .pipe(gulpIf(env === 'production', minifyImg({
+      progessive:   true,
+      svgoPlugins:  [{ removeViewBox: false }],
+      use:          [pngcrush()]
+    })))
+    .pipe(gulpIf(env === 'production', gulp.dest(outputDir + 'imgs')))
+    .pipe(connect.reload())
+});
+
 gulp.task('connect', function() {
   connect.server({
     root: 'src/',
     livereload: true
   });
-});
-
-gulp.task('html', function() {
-  gulp.src(paths.htmlSrc)
-    .pipe(gulpIf(env === 'production', minifyHtml()))
-    .pipe(gulpIf(env === 'production', gulp.dest(paths.htmlDst)))
-    .pipe(connect.reload())
-});
-
-gulp.task('json', function() {
-  gulp.src(paths.jsonSrc)
-    .pipe(connect.reload())
 });
 
 gulp.task('watch', function() {
@@ -103,6 +120,7 @@ gulp.task('watch', function() {
   gulp.watch('src/_scss/**/*.scss', ['compass']);
   gulp.watch(paths.htmlSrc, ['html']);
   gulp.watch(paths.jsonSrc, ['json']);
+  gulp.watch(paths.imgSrc, ['images']);
 });
 
 gulp.task('default', [
@@ -111,6 +129,7 @@ gulp.task('default', [
   'json',
   'compass', 
   'connect', 
-  'html', 
+  'html',
+  'images',
   'watch'
 ]);
