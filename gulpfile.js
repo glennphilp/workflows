@@ -7,6 +7,7 @@ var gulp        = require('gulp'),
     concat      = require('gulp-concat'),
     connect     = require('gulp-connect'),
     gulpIf      = require('gulp-if'),
+    gzip        = require('gulp-gzip'),
     minifyHtml  = require('gulp-minify-html'),
     minifyImg   = require('gulp-imagemin'),
     minifyJson  = require('gulp-jsonminify'),
@@ -81,9 +82,11 @@ gulp.task('json', function() {
 gulp.task('compass', function() {
   gulp.src(paths.scssSrc)
     .pipe(compass({
-      sass: 'src/_scss',
-      image: outputDir + 'imgs',
-      style: sassOutput
+      sass:     'src/_scss',
+      image:    outputDir + 'imgs',
+      font:     outputDir + 'fonts',
+      style:    sassOutput,
+      require:  ['SassyIcons', 'modernizr-mixin']
     }))
     .on('error', util.log)
     .pipe(gulp.dest(paths.scssDst))

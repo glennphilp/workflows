@@ -5,6 +5,10 @@
 @import "compass";
 @import "compass/reset";
 @import "compass/css3/box-shadow";
+
+//Add-ons for Compass
+@import 'SassyIcons';
+@import 'modernizr';
  
 //Core partials
 @import "variables";
