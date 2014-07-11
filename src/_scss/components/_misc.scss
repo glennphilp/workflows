@@ -1,0 +1,34 @@
+// FUTURE: Create the comment mixin to output weather it is a note
+// or public comment. Create a note type for TODO, FIXME, NOTE, CHANGES
+// and FUTURE
+
+@mixin c($type, $text){
+  $l: str-length($text);
+  $s1: '';
+  $s2: '';
+  @for $i from 0 to $l {
+    $s1: $s1 + '=';
+    $s2: $s2 + '-';
+  }
+  @if $type == 'h1' {
+  /*!
+  #{$s1}
+  #{$text}
+  #{$s1}
+  */
+  }
+  @if $type == 'h2' {
+  /*!
+  #{$text}
+  #{$s1}
+  */
+  }
+  @if $type == 'h3' {
+  /*!
+  #{$text}
+  #{$s2}
+  */
+  }
+}
+
+@include c('h1', 'Loading the Icon font');

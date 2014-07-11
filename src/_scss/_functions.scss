@@ -2,14 +2,18 @@
 // foundation.zurb.com
 // Licensed under MIT Open Source
 
+// @author: Glenn Philp
+// CHANGES: Replaced all !default values with !global
+// this is a SASS 3.3 required change
+
 // This is the default html and body font-size for the base rem value.
-$rem-base: 16px !default;
+$rem-base: 16px !global;
 
 // IMPORT ONCE
 // We use this to prevent styles from being loaded multiple times for compenents that rely on other components. 
-$modules: () !default;
+$modules: () !global;
 @mixin exports($name) {
-  @if (index($modules, $name) == false) {
+  @if (not index($modules, $name)) {
     $modules: append($modules, $name);
     @content;
   }
@@ -42,10 +46,20 @@ $modules: () !default;
   @return $num / ($num * 0 + 1);
 }
 
-// CONVERT TO REM
-@function convert-to-rem($value, $base-value: $rem-base)  {
-  $value: strip-unit($value) / strip-unit($base-value) * 1rem;
-  @if ($value == 0rem) { $value: 0; } // Turn 0rem into 0
+// @author: Glenn Philp
+// CHANGES: Replaced convert-to-rem with convert-to-unit
+// then added an if/else statement to output px values only
+// for older the IE9 browsers
+
+// CONVERT TO PX OR REM
+@function convert-to-unit($value, $base-value: $rem-base)  {
+  @if $px-only {
+    $value: strip-unit($value) * 1px;
+    @if ($value == 0px) { $value: 0; } //Turn 0px into 0
+  } @else {
+    $value: strip-unit($value) / strip-unit($base-value) * 1rem;
+    @if ($value == 0rem) { $value: 0; } // Turn 0rem into 0
+  }
   @return $value;
 }
 
@@ -76,14 +90,17 @@ $modules: () !default;
 // 
 //   rem-calc((16px, 32px, 48), 8px);
 
+// CHANGES: Had to update the function with convert-to-unit
+// instead of convert-to-rem
+
 @function rem-calc($values, $base-value: $rem-base) {
   $max: length($values);
 
-  @if $max == 1 { @return convert-to-rem(nth($values, 1), $base-value); }
+  @if $max == 1 { @return convert-to-unit(nth($values, 1), $base-value); }
 
   $remValues: ();
   @for $i from 1 through $max {
-    $remValues: append($remValues, convert-to-rem(nth($values, $i), $base-value));
+    $remValues: append($remValues, convert-to-unit(nth($values, $i), $base-value));
   }
   @return $remValues;
 }
@@ -98,4 +115,26 @@ $modules: () !default;
 // Deprecated: We'll drop support for this in 5.1.0, use rem-calc()
 @function em-calc($values){
   @return rem-calc($values);
+}
+
+// Making IE 7 and 8 output nth-child
+// Authored by Scott Kellum (http://codepen.io/scottkellum/pen/isytK)
+@function nth-child($n) {
+  $nth-child: first-child;
+  @for $i from 2 through $n {
+    $nth-child: append($nth-child, #{"+ *"});
+  }
+  @return #{":"}$nth-child;
+}
+
+// Z-Index source ordering
+@function z($list, $element) {
+  $z-index: index($list, $element);
+  
+  @if $z-index {
+    @return $z-index;
+  }
+  
+  @warn 'There is no item "#{$element}" in this list; chose one of: #{$list}';
+  @return null;
 }

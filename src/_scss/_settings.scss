@@ -3,24 +3,24 @@
 //
 
 // Allows the use of rem-calc() or lower-bound() in your settings
-@import "core/foundation/functions";
+@import "functions";
 
 @import
-    "components/colors",
-    "components/global",
-    "components/grid",
-    "components/type",
-    "components/accordion",
-    "components/alert",
-    "components/breadcrumb",
-    "components/buttons",
-    "components/clearing",
-    "components/dropdown",
-    "components/flex-video",
-    "components/forms",
-    "components/inline-list",
-    "components/panels",
-    "components/tabs";
+    "settings/colors",
+    "settings/global",
+    "settings/grid",
+    "settings/type",
+    "settings/accordion",
+    "settings/alert",
+    "settings/breadcrumb",
+    "settings/buttons",
+    "settings/clearing",
+    "settings/dropdown",
+    "settings/flex-video",
+    "settings/forms",
+    "settings/inline-list",
+    "settings/panels",
+    "settings/tabs";
 
 // We use these to control inset shadow shiny edges and depressions.
 // $shiny-edge-size: 0 1px 0;

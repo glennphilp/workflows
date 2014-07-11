@@ -22,9 +22,12 @@ var env,
     imgSrc,
     scssSrc,
     outputDir,
-    sassOutput;
+    sassOutput,
+    zipConfig;
 
 env = process.env.NODE_ENV || 'development';
+
+zipConfig = {threshold: '1kb'};
 
 if (env === 'development') {
   outputDir = 'src/';
