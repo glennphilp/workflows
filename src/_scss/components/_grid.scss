@@ -246,11 +246,11 @@ $total-columns: 12 !default;
                 @include grid-html-classes($size:xxlarge);
             }
         }
-    } @else if ($mobile-only) {
+    } @else if ($mobile) {
         @include grid-html-classes($size:small);
-    } @else if ($tablet-only) {
+    } @else if ($tablet) {
         @include grid-html-classes($size:medium);
-    } @else if ($desktop-only) {
+    } @else if ($desktop) {
         @include grid-html-classes($size:large);
     } @else {
       @include grid-html-classes($size:large);

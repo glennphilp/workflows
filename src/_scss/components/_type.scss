@@ -155,8 +155,13 @@ $align-class-breakpoints:
 
 // These will throw a deprecation warning if used within a media query.
 @mixin lead {
-  font-size: $paragraph-font-size + rem-calc(3.5);
-  line-height: 1.6;
+  @if $px-only {
+    font-size: $paragraph-font-size + 3.5;
+    line-height: 1.6;
+  } else {
+    font-size: $paragraph-font-size + 0.21875;
+    line-height: 1.6;
+  }
 }
 
 @mixin subheader {

@@ -2,11 +2,11 @@
 // ==============
 
 // If full responsive is desired
-$responsive:  true;
+$responsive:  false;
 // If only one device type is needed
 $desktop:     false;
 $tablet:      false;
-$mobile:      false;
+$mobile:      true;
 // If IE-only turn both to true
 $ie:          false;
 $px-only:     false;

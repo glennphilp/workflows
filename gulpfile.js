@@ -7,7 +7,7 @@ var gulp        = require('gulp'),
     concat      = require('gulp-concat'),
     connect     = require('gulp-connect'),
     gulpIf      = require('gulp-if'),
-    gzip        = require('gulp-gzip'),
+    minifyCss   = require('gulp-minify-css'),
     minifyHtml  = require('gulp-minify-html'),
     minifyImg   = require('gulp-imagemin'),
     minifyJson  = require('gulp-jsonminify'),
@@ -15,26 +15,14 @@ var gulp        = require('gulp'),
     uglify      = require('gulp-uglify');
 
 var env,
-    coffeeSrc,
-    jsSrc,
-    jsonSrc,
-    htmlSrc,
-    imgSrc,
-    scssSrc,
-    outputDir,
-    sassOutput,
-    zipConfig;
+    outputDir;
 
 env = process.env.NODE_ENV || 'development';
 
-zipConfig = {threshold: '1kb'};
-
 if (env === 'development') {
   outputDir = 'src/';
-  sassOutput = 'expanded';
 } else {
   outputDir = 'build/';
-  sassOutput = 'compressed';
 }
 
 var paths = {
@@ -49,13 +37,16 @@ var paths = {
   jsDst:      outputDir + 'js',
   jsonSrc:    ['src/js/*.json'],
   imgSrc:     ['src/imgs/**/*.*'],
-//    imgDst: './build/images',
   htmlSrc:    ['src/*.html'],
   htmlDst:    outputDir,
-  scssSrc:    ['./src/_scss/style.scss'],
+  scssSrc:    [
+    'src/_scss/style.scss',
+    'src/_scss/style-desktop.scss',
+    'src/_scss/style-tablet.scss',
+    'src/_scss/style-mobile.scss',
+    'src/_scss/style-ie.scss'
+  ],
   scssDst:    outputDir + 'css'
-//    cssSrc: './src/css/**/*.css',
-//    cssDst: './build/css'
 };
 
 
@@ -88,10 +79,10 @@ gulp.task('compass', function() {
       sass:     'src/_scss',
       image:    outputDir + 'imgs',
       font:     outputDir + 'fonts',
-      style:    sassOutput,
       require:  ['SassyIcons', 'modernizr-mixin']
     }))
     .on('error', util.log)
+    .pipe(gulpIf(env === 'production', minifyCss()))
     .pipe(gulp.dest(paths.scssDst))
 });
 
