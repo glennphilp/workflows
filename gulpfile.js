@@ -12,7 +12,9 @@ var gulp        = require('gulp'),
     minifyImg   = require('gulp-imagemin'),
     minifyJson  = require('gulp-jsonminify'),
     pngcrush    = require('imagemin-pngcrush'),
-    uglify      = require('gulp-uglify');
+//    styleguide  = require('gulp-livingstyleguide'),
+    uglify      = require('gulp-uglify'),
+    uncss       = require('gulp-uncss');
 
 var env,
     outputDir;
@@ -29,10 +31,50 @@ var paths = {
   coffeeSrc:  ['src/components/coffee/tagline.coffee'],
   coffeeDst:  'src/components/js',
   jsSrc:      [
-    'src/components/js/rclick.js',
-    'src/components/js/pixgrid.js',
-    'src/components/js/tagline.js',
-    'src/components/js/template.js'
+    'src/components/js/vendor/jquery.js',
+    'src/components/js/vendor/fastclick.js',
+    'src/components/js/vendor/placeholder.js',
+    'src/components/js/vendor/jquery.cookie.js',
+    'src/components/js/vendor/jquery.slideme-1.21.71.js',
+    'src/components/js/vendor/foundation.abide.js',
+    'src/components/js/vendor/foundation.accordion.js',
+    'src/components/js/vendor/foundation.alert.js',
+    'src/components/js/vendor/foundation.clearing.js',
+    'src/components/js/vendor/foundation.dropdown.js',
+    'src/components/js/vendor/foundation.equalizer.js',
+    'src/components/js/vendor/foundation.interchange.js',
+    'src/components/js/vendor/foundation.joyride.js',
+    'src/components/js/vendor/foundation.magellan.js',
+    'src/components/js/vendor/foundation.offcanvas.js',
+    'src/components/js/vendor/foundation.orbit.js',
+    'src/components/js/vendor/foundation.reveal.js',
+    'src/components/js/vendor/foundation.slider.js',
+    'src/components/js/vendor/foundation.tab.js',
+    'src/components/js/vendor/foundation.tooltip.js',
+    'src/components/js/vendor/foundation.topbar.js'
+  ],
+  ieJsSrc: [
+    'src/components/js/vendor/jquery-1.11.1.js',
+    'src/components/js/vendor/fastclick.js',
+    'src/components/js/vendor/placeholder.js',
+    'src/components/js/vendor/jquery.cookie.js',
+    'src/components/js/vendor/jquery.slideme-1.21.71.js',
+    'src/components/js/vendor/foundation.abide.js',
+    'src/components/js/vendor/foundation.accordion.js',
+    'src/components/js/vendor/foundation.alert.js',
+    'src/components/js/vendor/foundation.clearing.js',
+    'src/components/js/vendor/foundation.dropdown.js',
+    'src/components/js/vendor/foundation.equalizer.js',
+    'src/components/js/vendor/foundation.interchange.js',
+    'src/components/js/vendor/foundation.joyride.js',
+    'src/components/js/vendor/foundation.magellan.js',
+    'src/components/js/vendor/foundation.offcanvas.js',
+    'src/components/js/vendor/foundation.orbit.js',
+    'src/components/js/vendor/foundation.reveal.js',
+    'src/components/js/vendor/foundation.slider.js',
+    'src/components/js/vendor/foundation.tab.js',
+    'src/components/js/vendor/foundation.tooltip.js',
+    'src/components/js/vendor/foundation.topbar.js'
   ],
   jsDst:      outputDir + 'js',
   jsonSrc:    ['src/js/*.json'],
@@ -54,7 +96,7 @@ gulp.task('coffee', function() {
   gulp.src(paths.coffeeSrc)
     .pipe(coffee({ bare: true })
       .on('error', util.log))
-    .pipe(gulp.dest(paths.coffeeDst))
+    .pipe(gulp.dest(paths.coffeeDst));
 });
 
 gulp.task('js', function() {
@@ -63,14 +105,23 @@ gulp.task('js', function() {
     .pipe(browserify())
     .pipe(gulpIf(env === 'production', uglify()))
     .pipe(gulp.dest(paths.jsDst))
-    .pipe(connect.reload())
+    .pipe(connect.reload());
+});
+
+gulp.task('ieJs', function() {
+  gulp.src(paths.ieJsSrc)
+    .pipe(concat('script-ie.js'))
+    .pipe(browserify())
+    .pipe(gulpIf(env === 'production', uglify()))
+    .pipe(gulp.dest(paths.jsDst))
+    .pipe(connect.reload());
 });
 
 gulp.task('json', function() {
   gulp.src(paths.jsonSrc)
     .pipe(gulpIf(env === 'production', minifyJson()))
     .pipe(gulpIf(env === 'production', gulp.dest('build/js')))
-    .pipe(connect.reload())
+    .pipe(connect.reload());
 });
 
 gulp.task('compass', function() {
@@ -83,14 +134,14 @@ gulp.task('compass', function() {
     }))
     .on('error', util.log)
     .pipe(gulpIf(env === 'production', minifyCss()))
-    .pipe(gulp.dest(paths.scssDst))
+    .pipe(gulp.dest(paths.scssDst));
 });
 
 gulp.task('html', function() {
   gulp.src(paths.htmlSrc)
     .pipe(gulpIf(env === 'production', minifyHtml()))
     .pipe(gulpIf(env === 'production', gulp.dest(outputDir)))
-    .pipe(connect.reload())
+    .pipe(connect.reload());
 });
 
 gulp.task('images', function() {
@@ -101,8 +152,14 @@ gulp.task('images', function() {
       use:          [pngcrush()]
     })))
     .pipe(gulpIf(env === 'production', gulp.dest(outputDir + 'imgs')))
-    .pipe(connect.reload())
+    .pipe(connect.reload());
 });
+
+//gulp.task('styleguide', function () {
+//    gulp.src('styleguide.html.lsg')
+//        .pipe(styleguide())
+//        .pipe(gulp.dest('dist'));
+//});
 
 gulp.task('connect', function() {
   connect.server({
@@ -114,6 +171,7 @@ gulp.task('connect', function() {
 gulp.task('watch', function() {
   gulp.watch(paths.coffeeSrc, ['coffee']);
   gulp.watch(paths.jsSrc, ['js']);
+  gulp.watch(paths.ieJsSrc, ['ieJs']);
   gulp.watch('src/_scss/**/*.scss', ['compass']);
   gulp.watch(paths.htmlSrc, ['html']);
   gulp.watch(paths.jsonSrc, ['json']);
@@ -121,8 +179,9 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', [
-  'coffee', 
+  'coffee',
   'js',
+  'ieJs',
   'json',
   'compass', 
   'connect', 
